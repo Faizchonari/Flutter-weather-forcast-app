@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app_final/screens/widget/weather_icon.dart';
-import 'package:weather_app_final/screens/widget/weather_status.dart';
+import 'package:weather_app_final/data/weather_icon.dart';
+import 'package:weather_app_final/data/weather_status.dart';
 import 'package:weather_app_final/services/fetch_weatherdata.dart';
 import 'package:weather_app_final/weather_data/current_weather.dart';
 import 'package:weather_app_final/weather_data/hourly_units.dart';
