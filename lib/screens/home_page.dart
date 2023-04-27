@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app_final/data/weather_icon.dart';
 import 'package:weather_app_final/data/weather_status.dart';
+import 'package:weather_app_final/screens/tempature.dart';
 import 'package:weather_app_final/services/fetch_weatherdata.dart';
 import 'package:weather_app_final/weather_data/current_weather.dart';
 import 'package:weather_app_final/weather_data/hourly.dart';
@@ -14,10 +15,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Tab> tabs = [
-      Tab(
+      const Tab(
         text: 'current weather',
       ),
-      Tab(
+      const Tab(
         text: 'Temparature',
       )
     ];
@@ -53,7 +54,7 @@ class HomePage extends StatelessWidget {
                         currentWeather: currentWeather,
                         unit: unit,
                         listdata: listdata),
-                    Tempatature(listdata: listdata)
+                    Temperature(listdata: listdata)
                   ]);
                 }
             }
@@ -105,43 +106,6 @@ class NewWidget extends StatelessWidget {
           height: 30,
         ),
       ],
-    );
-  }
-}
-
-class Tempatature extends StatelessWidget {
-  const Tempatature({
-    super.key,
-    required this.listdata,
-  });
-
-  final Hourly listdata;
-
-  @override
-  Widget build(BuildContext context) {
-    final dsize = MediaQuery.of(context).size;
-    return SizedBox(
-      height: dsize.height * 0.5,
-      width: dsize.width * 0.7,
-      child: LineChart(
-        LineChartData(
-          minX: 0,
-          maxX: listdata.time!.length.toDouble(),
-          minY: 0,
-          maxY: listdata.temperature2m!.length.toDouble(),
-          lineBarsData: [
-            LineChartBarData(
-              spots: List.generate(
-                listdata.time!.length,
-                (index) => FlSpot(index.toDouble(),
-                    listdata.temperature2m![index].toDouble()),
-              ),
-              isCurved: true,
-              barWidth: 2,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
