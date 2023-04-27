@@ -4,6 +4,7 @@ part 'hourly.g.dart';
 
 @JsonSerializable()
 class Hourly {
+  static const id = 'hourly';
   @JsonKey(name: 'time')
   List<int>? time;
   @JsonKey(name: 'temperature_2m')

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:weather_app_final/weather_data/hourly.dart';
 import 'package:weather_app_final/weather_data/hourly_units.dart';
 import '../weather_data/current_weather.dart';
 
@@ -15,9 +16,11 @@ Future<Map<String, dynamic>> getData() async {
         CurrentWeather.fromJson(responseData[CurrentWeather.id]);
 
     final unit = HourlyUnits.fromJson(responseData[HourlyUnits.id]);
+    final listofdata = Hourly.fromJson(responseData[Hourly.id]);
     return {
       CurrentWeather.id: currentWeather,
       HourlyUnits.id: unit,
+      Hourly.id:listofdata,
     };
   } else {
     throw Exception(
