@@ -1,4 +1,3 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app_final/data/weather_icon.dart';
 import 'package:weather_app_final/data/weather_status.dart';
@@ -32,7 +31,7 @@ class HomePage extends StatelessWidget {
           ),
         ),
         body: FutureBuilder<Map<String, dynamic>>(
-          future: getData(),
+          future: WeatherData.getWeatherData(Navigator.of(context)),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:

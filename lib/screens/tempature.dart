@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../weather_data/hourly.dart';
-import 'dart:ui';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class Temperature extends StatelessWidget {
   const Temperature({
@@ -25,21 +23,7 @@ class Temperature extends StatelessWidget {
               DateTime.fromMillisecondsSinceEpoch(listdata.time![i] * 1000)),
           listdata.temperature2m![i]));
     }
-    final gradientColors = [
-      Colors.blue[50]!,
-      Colors.blue[200]!,
-      Colors.blue[400]!,
-      Colors.blue[600]!,
-      Colors.blue[800]!,
-      Colors.blue[900]!,
-    ];
-    final gradientStops = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0];
-    final gradient = LinearGradient(
-      colors: gradientColors,
-      stops: gradientStops,
-      begin: Alignment.bottomCenter,
-      end: Alignment.topCenter,
-    );
+
     return Scaffold(
       body: ListView(
         children: [
@@ -48,7 +32,6 @@ class Temperature extends StatelessWidget {
             height: dsize.height * 0.4,
             child: SfCartesianChart(
               enableAxisAnimation: true,
-              backgroundColor: Colors.amber,
               primaryXAxis: CategoryAxis(
                 labelRotation: 45,
               ),
