@@ -25,7 +25,7 @@ class WeatherData {
     final dio = Dio();
     final response = await dio
         .get(
-            'https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&hourly=temperature_2m&current_weather=true&timeformat=unixtime&forecast_days=1')
+            'https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&hourly=temperature_2m,temperature_80m,temperature_120m,temperature_180m&current_weather=true&timeformat=unixtime&forecast_days=1')
         .timeout(const Duration(seconds: 10));
 
     if (response.statusCode == 200) {
