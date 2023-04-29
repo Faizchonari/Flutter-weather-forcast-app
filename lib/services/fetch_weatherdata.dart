@@ -11,9 +11,6 @@ import 'package:weather_app_final/weather_data/hourly.dart';
 import 'package:weather_app_final/weather_data/hourly_units.dart';
 
 class WeatherData {
-  static const latitude = 52.52;
-  static const longitude = 13.41;
-
   static Future<Map<String, dynamic>> getWeatherData(
       NavigatorState navigatorState) async {
     // Check internet connectivity
@@ -21,7 +18,13 @@ class WeatherData {
     if (connectivityResult == ConnectivityResult.none) {
       throw Exception('No internet connection');
     }
-
+    LocationData locationData = LocationData();
+    Position? position = await locationData.getCurrentLocation(navigatorState);
+    if (position == null) {
+      throw Exception('Failed to get current location');
+    }
+    final latitude = position.latitude;
+    final longitude = position.longitude;
     final dio = Dio();
     final response = await dio
         .get(
@@ -47,7 +50,7 @@ class WeatherData {
   }
 }
 
-class Location {
+class LocationData {
   double? latitude;
   double? longitude;
 
@@ -56,23 +59,56 @@ class Location {
     var permission = await Permission.locationWhenInUse.status;
     if (permission == PermissionStatus.granted) {
       // permission granted, get the current location
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      latitude = position.latitude;
-      longitude = position.longitude;
-      return position;
-    } else if (permission == PermissionStatus.denied) {
-      // permission denied, navigate to new page to request permission
-      navigatorState.push(
-        MaterialPageRoute(builder: (context) => NetworkError()),
-      );
-      return null;
-    } else if (permission.isPermanentlyDenied) {
-      // permission permanently denied, navigate to new page to request permission
-      navigatorState.push(
-        MaterialPageRoute(builder: (context) => NetworkError()),
-      );
-      return null;
+      try {
+        Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
+        latitude = position.latitude;
+        longitude = position.longitude;
+        return position;
+      } catch (e) {
+        throw Exception('Failed to get current location');
+      }
+    } else if (permission == PermissionStatus.denied ||
+        permission.isPermanentlyDenied) {
+      // permission denied, request location permission
+      var status = await Permission.locationWhenInUse.request();
+      if (status == PermissionStatus.granted) {
+        // permission granted, get the current location
+        try {
+          Position position = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
+          latitude = position.latitude;
+          longitude = position.longitude;
+          return position;
+        } catch (e) {
+          throw Exception('Failed to get current location');
+        }
+      } else {
+        // permission still not granted, show alert dialog
+        showDialog(
+          context: navigatorState.context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Location Permission Required'),
+              content: Text(
+                  'Please allow the app to access your location to use this feature.'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                TextButton(
+                  child: Text('Open Settings'),
+                  onPressed: () {
+                    openAppSettings();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
     return null;
   }

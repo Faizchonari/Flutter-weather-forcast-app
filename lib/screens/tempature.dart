@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:weather_app_final/services/fetch_weatherdata.dart';
 import '../weather_data/hourly.dart';
 
-class Temperature extends StatelessWidget {
+class Temperature extends StatefulWidget {
   const Temperature({
     Key? key,
     required this.listdata,
@@ -12,19 +13,30 @@ class Temperature extends StatelessWidget {
   final Hourly listdata;
 
   @override
+  State<Temperature> createState() => _TemperatureState();
+}
+
+class _TemperatureState extends State<Temperature> {
+  @override
+  void initState() {
+    LocationData();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final dsize = MediaQuery.of(context).size;
     final List<Data> chartData = [];
 
     // Convert unix timestamp to DateTime and add to chartData list
-    for (int i = 0; i < listdata.time!.length; i++) {
+    for (int i = 0; i < widget.listdata.time!.length; i++) {
       chartData.add(Data(
-        DateFormat('hh:mm a').format(
-            DateTime.fromMillisecondsSinceEpoch(listdata.time![i] * 1000)),
-        listdata.temperature2m![i],
-        listdata.temperature_80m![i],
-        listdata.temperature_120m![i],
-        listdata.temperature_180m![i],
+        DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+            widget.listdata.time![i] * 1000)),
+        widget.listdata.temperature2m![i],
+        widget.listdata.temperature_80m![i],
+        widget.listdata.temperature_120m![i],
+        widget.listdata.temperature_180m![i],
       ));
     }
 
@@ -89,11 +101,11 @@ class Temperature extends StatelessWidget {
       xValueMapper: (Data data, _) => data.time,
       yValueMapper: yValueMapper,
       animationDuration: 2000,
-      width: 3,
+      width: 5,
       markerSettings:
-          MarkerSettings(isVisible: true, shape: DataMarkerType.circle),
+          const MarkerSettings(isVisible: false, shape: DataMarkerType.circle),
       enableTooltip: true,
-      dataLabelSettings: DataLabelSettings(isVisible: false),
+      dataLabelSettings: const DataLabelSettings(isVisible: false),
     );
   }
 }
